@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "985188939208",
+    "firebase_url": "https://temps-app-c38b5-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "temps-app-c38b5",
+    "storage_bucket": "temps-app-c38b5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985188939208:android:60dc6d95d9515962b07cfd",
+        "android_client_info": {
+          "package_name": "com.example.temps_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "985188939208-6er4pii6hvjks99revqj073mnqhtvpuj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzDs1U13j56Ge9ud138XAUlwr30Weh2TE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "985188939208-6er4pii6hvjks99revqj073mnqhtvpuj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
