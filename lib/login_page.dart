@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:temps_app/admin_home.dart';
 import 'package:temps_app/auth.dart';
 import 'package:temps_app/home.dart';
 
@@ -102,9 +103,20 @@ class _LoginPageState extends State {
     if(user != null){
       print("User is signed in");
       print(user);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context){
-        return Home();
-      }));
+
+      if(email == 'islam@gmail.com' || email == '' || email == ''){
+        print("navigate admin to admin home");
+        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+          return AdminHome();
+        }));
+      }else {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+          return Home();
+        }));
+
+      }
+
+
     } else {
       print("some error happened");
     }

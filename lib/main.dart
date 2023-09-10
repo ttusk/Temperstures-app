@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:temps_app/admin_home.dart';
 import 'package:temps_app/background_service.dart';
 import 'package:temps_app/home.dart';
 import 'package:temps_app/login_page.dart';
@@ -41,18 +42,33 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   User? user;
+  String? email;
+
 
   @override
   void initState() {
     super.initState();
     user = FirebaseAuth.instance.currentUser;
     print(user?.uid.toString());
+    print(user?.email.toString());
+    email = user?.email.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: user != null ? Home() : LoginPage(),
+      //home: user != null ? Home() : LoginPage(),
+      home: user != null ? userOrAdmin() : LoginPage(),
     );
+
   }
+  Widget userOrAdmin(){
+    if(email == 'islam@gmail.com' || email == '' || email == ''){
+      return AdminHome();
+    }else {
+      return Home();
+    }
+  }
+
+
 }
