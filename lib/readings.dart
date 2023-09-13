@@ -8,7 +8,7 @@ import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 
 
-String text = "";
+String text = "Start service";
 
 class Readings extends StatefulWidget {
   const Readings({Key? key}) : super(key: key);
@@ -43,18 +43,19 @@ class _ReadingsState extends State<Readings> {
   @override
   void initState() {
     super.initState();
-    checkText();
+    checkText().then((_) => setState((){}));
     print("check text");
     setState(() {
       checkText();
     });
   }
-  @override
-  void setState(VoidCallback fn) {
-    // TODO: implement setState
-    super.setState(fn);
-    checkText();
-  }
+
+  // @override
+  // void setState(VoidCallback fn) {
+  //   // TODO: implement setState
+  //   super.setState(fn);
+  //   checkText();
+  // }
 
   // final ref = FirebaseDatabase.getInstance("https://temps-app-c38b5-default-rtdb.europe-west1.firebasedatabase.app");
 

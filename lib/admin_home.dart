@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:temps_app/login_page.dart';
 import 'package:temps_app/readings.dart';
+import 'package:temps_app/view_all_users.dart';
 
 
 class AdminHome extends StatefulWidget {
@@ -55,8 +56,16 @@ class _AdminHomeState extends State {
                 ),
               ),
 
-              ElevatedButton(onPressed: (){},
-                  child: Text("hmmmmm"))
+              ElevatedButton(onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                  return ViewAllUsers();
+                }));
+              },
+                  child: Text("View all users"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.yellow[600],
+              ),
+              )
             ],
           )
       ),

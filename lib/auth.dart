@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class Auth{
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -9,7 +10,7 @@ class Auth{
       UserCredential credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       return credential.user;
     }catch(e){
-      print("some error occured");
+      print("some error occurred");
     }
     return null;
   }
@@ -26,6 +27,8 @@ class Auth{
 
     }
   }
+
+
 
 }
 

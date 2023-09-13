@@ -149,7 +149,9 @@ void onStart(ServiceInstance service) async{
                 .value;
 
             if (service is AndroidServiceInstance) {
+              print("Hello");
               if (await service.isForegroundService()) {
+
                 service.setForegroundNotificationInfo(
                     title: "Room Temperature", content: "$temp°C");
               }

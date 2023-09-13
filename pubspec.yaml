@@ -47,6 +47,7 @@ dependencies:
   flutter_background_service_android: ^6.0.1
   permission_handler: ^10.4.3
   flutter_local_notifications: ^15.1.0+1
+  shared_preferences: ^2.2.1
 #  node_interop: ^2.1.0
 
 
