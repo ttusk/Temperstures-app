@@ -34,6 +34,14 @@ class _AddUserState extends State<AddUser> {
     return Scaffold(
       appBar: AppBar(
         // automaticallyImplyLeading: false,
+
+        leading: BackButton(
+          onPressed:  () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context){
+              return ViewAllUsers();
+            }));
+          },
+        ),
         title: Text("Add user"),
         centerTitle: true,
         backgroundColor: Colors.red[600],
@@ -109,12 +117,12 @@ class _AddUserState extends State<AddUser> {
                     ElevatedButton(
                       onPressed: () {
                        try{
-                         showError("Loading", context);
+                         // showError("Loading", context);
                          if(_idController.text.isEmpty || _nameController.text.isEmpty || _passwordController.text.isEmpty){
                            showError("Please enter all credentials.", context);
                            return;
                          }
-                         
+                         String? name = _nameController.text;
                          addNewUser(_idController.text, _nameController.text, _passwordController.text, isAdmin!);
                          showDialog(context: context,
                              builder: (context) => AlertDialog(
@@ -130,7 +138,8 @@ class _AddUserState extends State<AddUser> {
                                  )
                                ],
                                title: Text("New user"),
-                               content: Text("user added"),
+
+                               content: Text("$name added to database."),
                              ),
                          );
                          
@@ -152,15 +161,6 @@ class _AddUserState extends State<AddUser> {
 
             SizedBox(height: 15.0),
 
-            // ElevatedButton(
-            //   onPressed: () {
-            //     _signIn();
-            //   },
-            //   style: TextButton.styleFrom(
-            //     foregroundColor: Colors.yellow[600],
-            //   ),
-            //   child: Text("Log in"),
-            // ),
           ],
         ),
       ),

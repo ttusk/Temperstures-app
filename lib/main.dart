@@ -27,11 +27,19 @@ Future<void> main() async {
   User? user;
   user = FirebaseAuth.instance.currentUser;
 
+
+
   if (isRunning && user != null) {
     await initializeService();
+
   } else {}
 
   runApp(MyApp());
+}
+
+void onStart(){
+  WidgetsFlutterBinding.ensureInitialized();
+  final service = FlutterBackgroundService();
 }
 
 class MyApp extends StatefulWidget {
@@ -50,6 +58,7 @@ class _MyAppState extends State<MyApp> {
   String? id;
   bool? admin;
   bool? adminOrNot;
+  String? name;
 
 
 
@@ -78,6 +87,7 @@ class _MyAppState extends State<MyApp> {
 
   Widget navigator()  {
     print("$admin haha");
+    print("$name");
     if(user != null){
       if(admin == true){
         return AdminHome();
@@ -114,9 +124,11 @@ class _MyAppState extends State<MyApp> {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     id = pref.getString("id");
     admin = pref.getBool("admin");
+    name = pref.getString("name");
 
     print(id);
     print(admin);
+    print(name);
   }
 
 

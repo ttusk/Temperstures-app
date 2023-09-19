@@ -48,6 +48,7 @@ dependencies:
   permission_handler: ^10.4.3
   flutter_local_notifications: ^15.1.0+1
   shared_preferences: ^2.2.1
+  flutter_slidable: ^3.0.0
 #  node_interop: ^2.1.0
 
 

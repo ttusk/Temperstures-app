@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 // DatabaseReference ref = FirebaseDatabase.instanceFor(
@@ -41,19 +43,56 @@ void onStart(ServiceInstance service) async{
   });
 
 
+  String? id;
+  String? name;
 
-
-
-  void sendLogs(){
-    User? user;
-    user = FirebaseAuth.instance.currentUser;
-    CollectionReference users = FirebaseFirestore.instance.collection('Users');
-    DateTime now = DateTime.now();
-    // Map <String, dynamic> data = {"UID": user?.uid.toString(), "Date and time: ": now};
-    users.add({"UID": user?.uid.toString(), "Date and time: ": now});
-
-    // Firestore.instance.collection("test").add(data);
+  Future<void> getUserID() async{
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    id = pref.getString("id");
   }
+
+
+  Future<void> getName() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    name = pref.getString("name");
+  }
+
+
+
+
+  void sendLogs(String status){
+    getName();
+    print(name);
+    DateTime now = DateTime.now();
+    DateTime date =  DateTime(now.year, now.month, now.day);
+
+    // User? user;
+    // user = FirebaseAuth.instance.currentUser;
+    // CollectionReference users = FirebaseFirestore.instance.collection(date.toString());
+    //
+    //
+    // FirebaseFirestore.instance
+    //     .collection(date.toString())
+    //     .doc(id)
+    //     .set({'name': name, 'date and time': now, 'id': id, 'status': status});
+
+
+    //testing this bit
+
+    String timestmap = now.year.toString() + "-" + now.month.toString() + "-" + now.day.toString();
+
+    FirebaseFirestore.instance.collection("prevCalls").doc(timestmap).set({"uhm": "uhm"});
+    
+    FirebaseFirestore.instance.collection("prevCalls")
+        .doc(timestmap)
+        .collection("names")
+        .doc(id)
+        .set({'name': name, 'date and time': now, 'id': id, 'status': status});
+
+
+  }
+
+
 
 
 
@@ -74,7 +113,7 @@ void onStart(ServiceInstance service) async{
         duration: 30000,
         extra: {'userId':"sdhsjjfhuwhf"},
         android: AndroidParams(
-            isCustomNotification: true,
+            isCustomNotification: false,
             isShowLogo: false,
             // isShowCallback: false,
             // isShowMissedCallNotification: true,
@@ -84,6 +123,7 @@ void onStart(ServiceInstance service) async{
             actionColor: "#4CAF50",
             incomingCallNotificationChannelName: "Incoming call",
             missedCallNotificationChannelName: "Missed call",
+
         ),
       );
       await FlutterCallkitIncoming.showCallkitIncoming(params);
@@ -94,14 +134,15 @@ void onStart(ServiceInstance service) async{
       switch (params!.event){
         case Event.actionCallAccept:
           // service.invoke('stopService');
-          sendLogs();
+          sendLogs("accepted");
           service.stopSelf();
           print("call accepted lol");
+          SystemNavigator.pop();
           break;
 
         case Event.actionCallDecline:
           // service.invoke('stopService');
-          sendLogs();
+          sendLogs("declined");
           service.stopSelf();
           print("call declined lol");
           break;
@@ -133,15 +174,32 @@ void onStart(ServiceInstance service) async{
   // });
 
   Firebase.initializeApp().then((_value) {
+    getName();
+    getUserID();
+
     DatabaseReference ref = FirebaseDatabase.instanceFor(
         app: Firebase.app(),
         databaseURL:
         'https://temps-app-c38b5-default-rtdb.europe-west1.firebasedatabase.app')
         .ref("temp");
 
-      Timer.periodic(const Duration(seconds: 30), (timer) async {
+
+    var db = FirebaseFirestore.instance;
+    final docCall = db.collection("manualCall").doc("00");
+
+      Timer.periodic(const Duration(seconds: 1), (timer) async {
         // user = FirebaseAuth.instance.currentUser;
         // print(user?.uid.toString());
+
+        Timestamp? manualCall;
+        DateTime? date;
+
+        docCall.get().then((value) async => {
+        // manualCall = value.data()!['date and time'].toDate(),
+          date = value.data()!['date and time'].toDate(),
+
+          print(date)
+        });
 
           ref.get().then((value) async {
             final temp = value
@@ -154,11 +212,13 @@ void onStart(ServiceInstance service) async{
 
                 service.setForegroundNotificationInfo(
                     title: "Room Temperature", content: "$temp°C");
+
               }
             }
 
             if (temp != null && temp is num && temp >= 30) {
               call();
+              sendLogs("null");
             }
           });
 

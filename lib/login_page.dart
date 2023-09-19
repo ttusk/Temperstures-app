@@ -8,6 +8,8 @@ import 'package:temps_app/auth.dart';
 import 'package:temps_app/home.dart';
 import 'package:temps_app/auth.dart';
 
+import 'background_service.dart';
+
 void showError (msg, context){
   showDialog(
       context: context,
@@ -134,6 +136,7 @@ class _LoginPageState extends State {
 
     try {
       bool admin;
+      String name;
       showError("Loading", context);
       docUser.get().then((value) async =>
       {
@@ -142,25 +145,30 @@ class _LoginPageState extends State {
         if(value.exists){
 
           if(value.data()!['password'] == password){
+            name = value.data()!['name'],
 
             if(value.data()!['admin'] == true){
 
                admin = value.data()!['admin'],
-              saveUserData(id, admin),
+              saveUserData(id, admin, name),
               await _auth.signInAnon(),
 
               Navigator.of(context).push(MaterialPageRoute(builder: (context){
                 return AdminHome();
-              }))
+              })),
+
+              await initializeService()
 
             }else {
               admin = value.data()!['admin'],
-              saveUserData(id, admin),
+              saveUserData(id, admin, name),
               await _auth.signInAnon(),
 
               Navigator.of(context).push(MaterialPageRoute(builder: (context){
                 return Home();
-              }))
+              })),
+
+              await initializeService()
 
             }
           }
@@ -180,10 +188,10 @@ class _LoginPageState extends State {
   }
 
 
-  Future<void> saveUserData(id, admin) async{
+  Future<void> saveUserData(id, admin, name) async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setString("id", id);
-    // pref.setString("name", name);
+    pref.setString("name", name);
     pref.setBool("admin", admin);
   }
 

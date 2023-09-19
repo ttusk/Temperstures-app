@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temps_app/login_page.dart';
 import 'package:temps_app/readings.dart';
 
@@ -12,6 +13,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State {
   final service = FlutterBackgroundService();
+
+  String? name;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserData().then((_) => setState((){}));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +69,11 @@ class _HomeState extends State {
       ),
     );
 
+  }
+
+  Future<void> getUserData() async{
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    name = pref.getString("name");
   }
 
   
