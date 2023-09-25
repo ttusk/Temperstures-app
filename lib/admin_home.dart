@@ -4,6 +4,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temps_app/call_logs.dart';
 import 'package:temps_app/login_page.dart';
+import 'package:temps_app/manual_calls.dart';
 import 'package:temps_app/readings.dart';
 import 'package:temps_app/set_manual_call.dart';
 import 'package:temps_app/test.dart';
@@ -84,7 +85,7 @@ class _AdminHomeState extends State {
 
               ElevatedButton(onPressed: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                  return SetManualCall();
+                  return ManualCalls();
                 }));
               },
                 child: Text("Set manual call"),

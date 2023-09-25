@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -55,6 +56,17 @@ void onStart(ServiceInstance service) async{
   Future<void> getName() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     name = pref.getString("name");
+  }
+
+
+  List<String> items = [];
+  getManualCallsList() async {
+    var collection = FirebaseFirestore.instance.collection("manualCall");
+    var data = await collection.get();
+    data.docs.forEach((element) {
+      items.add(element.data()["date and time"].toDate().toString());
+    });
+
   }
 
 
@@ -176,6 +188,7 @@ void onStart(ServiceInstance service) async{
   Firebase.initializeApp().then((_value) {
     getName();
     getUserID();
+    getManualCallsList();
 
     DatabaseReference ref = FirebaseDatabase.instanceFor(
         app: Firebase.app(),
@@ -187,18 +200,43 @@ void onStart(ServiceInstance service) async{
     var db = FirebaseFirestore.instance;
     final docCall = db.collection("manualCall").doc("00");
 
+
       Timer.periodic(const Duration(seconds: 1), (timer) async {
         // user = FirebaseAuth.instance.currentUser;
         // print(user?.uid.toString());
 
-        Timestamp? manualCall;
+
+
+        for(int i = 0; i < items.length; i++){
+          DateTime manualCall = DateTime.parse(items[i]).subtract(const Duration(minutes: 30));
+          print(manualCall);
+          var window = manualCall.difference(DateTime.now()).inMinutes;
+          print(window);
+          if(window > 2 && window < 0){
+            call();
+          }
+
+        }
+
         DateTime? date;
 
         docCall.get().then((value) async => {
         // manualCall = value.data()!['date and time'].toDate(),
-          date = value.data()!['date and time'].toDate(),
+        //   date = value.data()!['date and time'].toDate(),
+          // print(date),
 
-          print(date)
+        db.collection("manualCall").count().get().then(
+        (res) => {
+          // res.query.where("date and time", ),
+          // print(res.count)
+        }
+        ),
+
+        // db.collection("manualCall").where("date and time", isGreaterThan: 10).count().get().then(
+        // (res) => print(res.count),
+        // onError: (e) => print("Error completing: $e"),
+        // )
+
         });
 
           ref.get().then((value) async {
