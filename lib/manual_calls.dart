@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:temps_app/set_manual_call.dart';
 
 import 'admin_home.dart';
@@ -61,14 +62,35 @@ class _ManualCallsState extends State<ManualCalls> {
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
                     // return Text("${docs.length}");
-                    return ListTile(
-                      title: Text(docs[index]['date and time'].toDate().toString()),
-                      // onTap: () {
-                      //   Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                      //     return viewLogs(docs[index].id);
-                      //   }));
-                      //
-                      // },
+                    return Slidable(
+                      startActionPane: ActionPane(
+                        motion: const BehindMotion(),
+                        children: [
+                          SlidableAction(
+                              icon: Icons.delete,
+                            backgroundColor: Colors.red,
+                            label: "DELETE",
+                            onPressed: (BuildContext context) {
+                              FirebaseFirestore.instance
+                                  .collection("manualCall")
+                                  .doc(docs[index].id)
+                                  .delete();
+                            },
+
+                          )
+                        ],
+                      ),
+                      child: ListTile(
+                        title: Text(docs[index]['date and time'].toDate().toString()),
+                        subtitle: Text(docs[index]['message']),
+                        // onTap: () {
+                        //   Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                        //     return viewLogs(docs[index].id);
+                        //   }));
+                        //
+                        // },
+
+                      ),
 
                     );
                   });

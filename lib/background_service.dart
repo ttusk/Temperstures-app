@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
@@ -12,13 +10,6 @@ import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
 import 'package:flutter_callkit_incoming/entities/entities.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-// DatabaseReference ref = FirebaseDatabase.instanceFor(
-//     app: Firebase.app(),
-//     databaseURL:
-//     'https://temps-app-c38b5-default-rtdb.europe-west1.firebasedatabase.app')
-//     .ref("temp");
 
 
 Future<void> initializeService() async{
@@ -40,12 +31,21 @@ void onStart(ServiceInstance service) async{
   }
   service.on('stopService').listen((event) {
     service.stopSelf();
-
   });
 
 
   String? id;
   String? name;
+  double? threshold;
+
+   getThreshold() {
+      FirebaseFirestore.instance.collection("tempThreshold").doc("00")
+          .get()
+          .then((value) async => {
+        threshold = value.data()!['threshold'].toDouble(),
+      });
+  }
+
 
   Future<void> getUserID() async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -66,33 +66,33 @@ void onStart(ServiceInstance service) async{
     data.docs.forEach((element) {
       items.add(element.data()["date and time"].toDate().toString());
     });
-
   }
 
+  List<String> messages = [];
+  getManualCallsMessages() async {
+    var collection = FirebaseFirestore.instance.collection("manualCall");
+    var data = await collection.get();
+    data.docs.forEach((element) {
+      messages.add(element.data()["message"]);
+    });
+  }
 
+  void sendManualCallLogs(String status, String manualCallTime){
+    FirebaseFirestore.instance.collection("manualCallsLogs").doc(manualCallTime).set({"uhm": "uhm"});
 
+    FirebaseFirestore.instance.collection("manualCallsLogs")
+        .doc(manualCallTime)
+        .collection("names")
+        .doc(id)
+        .set({'name': name, 'date and time': DateTime.now(), 'id': id, 'status': status});
+  }
 
   void sendLogs(String status){
-    getName();
-    print(name);
     DateTime now = DateTime.now();
-    DateTime date =  DateTime(now.year, now.month, now.day);
-
-    // User? user;
-    // user = FirebaseAuth.instance.currentUser;
-    // CollectionReference users = FirebaseFirestore.instance.collection(date.toString());
-    //
-    //
-    // FirebaseFirestore.instance
-    //     .collection(date.toString())
-    //     .doc(id)
-    //     .set({'name': name, 'date and time': now, 'id': id, 'status': status});
-
-
-    //testing this bit
 
     String timestmap = now.year.toString() + "-" + now.month.toString() + "-" + now.day.toString();
 
+    //dummy
     FirebaseFirestore.instance.collection("prevCalls").doc(timestmap).set({"uhm": "uhm"});
     
     FirebaseFirestore.instance.collection("prevCalls")
@@ -101,19 +101,14 @@ void onStart(ServiceInstance service) async{
         .doc(id)
         .set({'name': name, 'date and time': now, 'id': id, 'status': status});
 
-
   }
 
 
-
-
-
-  void call() async{
-    print("MORE");
+  void call(String message) async{
     await (() async {
-      CallKitParams params = const CallKitParams(
+      CallKitParams params =  CallKitParams(
         id: "21232dgfgbcbgb",
-        nameCaller: "TEMPERATURE IS ABOVE 30",
+        nameCaller: message,
         appName: "Temperature App",
         avatar: "https://i.pravata.cc/100",
         handle: "",
@@ -148,13 +143,64 @@ void onStart(ServiceInstance service) async{
           // service.invoke('stopService');
           sendLogs("accepted");
           service.stopSelf();
+          SystemNavigator.pop();
+          break;
+
+        case Event.actionCallDecline:
+          sendLogs("declined");
+          service.stopSelf();
+          SystemNavigator.pop();
+          break;
+      }
+
+    }  );
+
+  }
+
+  void manuallyCall(String message) async{
+    await (() async {
+      CallKitParams params =  CallKitParams(
+        id: "21232dgfgbcbgb",
+        nameCaller: message,
+        appName: "Temperature App",
+        avatar: "https://i.pravata.cc/100",
+        handle: "",
+        type: 0,
+        textAccept: "Accept",
+        textDecline: "Decline",
+        // textMissedCall: "Missed call",
+        // textCallback: "Call back",
+        duration: 30000,
+        extra: {'userId':"sdhsjjfhuwhf"},
+        android: AndroidParams(
+          isCustomNotification: false,
+          isShowLogo: false,
+          // isShowCallback: false,
+          // isShowMissedCallNotification: true,
+          ringtonePath: 'system_ringtone_default',
+          backgroundColor: "#0955fa",
+          backgroundUrl: "https://i.pravata.cc/500",
+          actionColor: "#4CAF50",
+          incomingCallNotificationChannelName: "Incoming call",
+          missedCallNotificationChannelName: "Missed call",
+
+        ),
+      );
+      await FlutterCallkitIncoming.showCallkitIncoming(params);
+
+    })();
+
+    FlutterCallkitIncoming.onEvent.listen((params){
+      switch (params!.event){
+        case Event.actionCallAccept:
+        // service.invoke('stopService');
+          service.stopSelf();
           print("call accepted lol");
           SystemNavigator.pop();
           break;
 
         case Event.actionCallDecline:
-          // service.invoke('stopService');
-          sendLogs("declined");
+        // service.invoke('stopService');
           service.stopSelf();
           print("call declined lol");
           break;
@@ -166,29 +212,9 @@ void onStart(ServiceInstance service) async{
 
 
 
-  // Timer.periodic(const Duration(seconds: 1), (timer) async {
-  //   // user = FirebaseAuth.instance.currentUser;
-  //   // print(user?.uid.toString());
-  //
-  //
-  //     if (service is AndroidServiceInstance) {
-  //       if (await service.isForegroundService()) {
-  //         service.setForegroundNotificationInfo(
-  //             title: "Room Temperature", content: "°C");
-  //       }
-  //     }
-  //
-  //
-  //
-  //   // perform some operations on background which isn't noticeable to the user
-  //   print("background service running");
-  //   service.invoke('update');
-  // });
-
   Firebase.initializeApp().then((_value) {
     getName();
     getUserID();
-    getManualCallsList();
 
     DatabaseReference ref = FirebaseDatabase.instanceFor(
         app: Firebase.app(),
@@ -202,9 +228,9 @@ void onStart(ServiceInstance service) async{
 
 
       Timer.periodic(const Duration(seconds: 1), (timer) async {
-        // user = FirebaseAuth.instance.currentUser;
-        // print(user?.uid.toString());
-
+        getManualCallsList();
+        getManualCallsMessages();
+        getThreshold();
 
 
         for(int i = 0; i < items.length; i++){
@@ -212,18 +238,19 @@ void onStart(ServiceInstance service) async{
           print(manualCall);
           var window = manualCall.difference(DateTime.now()).inMinutes;
           print(window);
-          if(window > 2 && window < 0){
-            call();
+          String callMessage = messages[i];
+          if(0 <= window && window <= 2){
+            manuallyCall(callMessage);
+            sendManualCallLogs("null", manualCall.toString());
           }
-
         }
 
-        DateTime? date;
+
 
         docCall.get().then((value) async => {
         // manualCall = value.data()!['date and time'].toDate(),
         //   date = value.data()!['date and time'].toDate(),
-          // print(date),
+        //   print(date),
 
         db.collection("manualCall").count().get().then(
         (res) => {
@@ -254,8 +281,8 @@ void onStart(ServiceInstance service) async{
               }
             }
 
-            if (temp != null && temp is num && temp >= 30) {
-              call();
+            if (temp != null && temp is num && temp >= threshold!) {
+              call("TEMPERATURE IS $temp");
               sendLogs("null");
             }
           });

@@ -7,6 +7,7 @@ import 'package:temps_app/login_page.dart';
 import 'package:temps_app/manual_calls.dart';
 import 'package:temps_app/readings.dart';
 import 'package:temps_app/set_manual_call.dart';
+import 'package:temps_app/set_threshold.dart';
 import 'package:temps_app/test.dart';
 import 'package:temps_app/view_all_users.dart';
 
@@ -43,6 +44,9 @@ class _AdminHomeState extends State {
             children: [
 
               Text("Welcome, $name"),
+
+              SizedBox(height: 10),
+
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context){
@@ -88,7 +92,18 @@ class _AdminHomeState extends State {
                   return ManualCalls();
                 }));
               },
-                child: Text("Set manual call"),
+                child: Text("Manual calls"),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.yellow[600],
+                ),
+              ),
+
+              ElevatedButton(onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                  return SetThreshold();
+                }));
+              },
+                child: Text("Set threshold"),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.yellow[600],
                 ),
