@@ -44,28 +44,24 @@ class _SetManualCallState extends State<SetManualCall> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CupertinoButton(
-                // child: Text("${dateTime.year.toString()}-${dateTime.month.toString()}-${dateTime.day.toString()}"),
-                child: Text("$dateTime"),
-                onPressed: () {
-                  showCupertinoModalPopup(
-                    context: context,
-                    builder: (BuildContext contex) => SizedBox(
-                      height: 200,
-                      child: CupertinoDatePicker(
-                        backgroundColor: Colors.white,
-                        initialDateTime: dateTime,
-                        use24hFormat: false,
-                        onDateTimeChanged: (DateTime newDateTime) {
-                          setState(() {
-                            dateTime = newDateTime;
-                          });
-                        },
-                      ),
-                    ),
-                  );
-                },
+              Text("Select date and time",
+                  style: TextStyle(fontSize: 20)
               ),
+
+              SizedBox(
+                height: 200,
+                child: CupertinoDatePicker(
+                  backgroundColor: Colors.white,
+                  initialDateTime: dateTime,
+                  use24hFormat: false,
+                  onDateTimeChanged: (DateTime newDateTime) {
+                    setState(() {
+                      dateTime = newDateTime;
+                    });
+                  },
+                ),
+              ),
+
 
               TextField(
                 controller: _messageController,

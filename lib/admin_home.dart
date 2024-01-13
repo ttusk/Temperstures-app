@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temps_app/call_logs.dart';
+import 'package:temps_app/components/my_button.dart';
 import 'package:temps_app/login_page.dart';
 import 'package:temps_app/manual_calls.dart';
 import 'package:temps_app/readings.dart';
@@ -32,96 +33,87 @@ class _AdminHomeState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        backgroundColor: Colors.grey[600],
         automaticallyImplyLeading: false,
-        title: Text("Admin"),
+        title: Text("Welcome, $name"),
       ),
       body: Container(
           alignment: Alignment.center,
-          color: const Color(0x00d9d9d9),
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: ListView(
             children: [
+              // Text("Welcome, $name",
+              // style: const TextStyle(
+              //   fontSize: 15,
+              //   fontWeight: FontWeight.bold,
+              // )),
 
-              Text("Welcome, $name"),
+              const SizedBox(height: 10),
 
-              SizedBox(height: 10),
-
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                    return const Readings();
-                  }));
-
-                },
-                child: Text("Room temprature"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-
-                ),
-              ),
-
-
-
-
-              ElevatedButton(onPressed: (){
+              MyButton(onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                  return ViewAllUsers();
+                  return const Readings();
                 }));
-              },
-                  child: Text("Manage all users"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-              ),
-              ),
+              }, text: 'Room temperatures',
+                padding: 15,
+                margin: 15),
 
-              ElevatedButton(onPressed: (){
+              const SizedBox(height: 10),
+
+              MyButton(onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                  return const ViewAllUsers();
+                }));
+              }, text: 'Manage users',
+                padding: 15,
+                margin: 15),
+
+              const SizedBox(height: 10),
+
+              MyButton(text: "Call logs",
+              onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (context){
                   // return CallLogs();
-                  return Test();
+                  return const Test();
                 }));
-              },
-                child: Text("Call logs"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-                ),
-              ),
+              }, padding: 15,
+                  margin: 15),
 
-              ElevatedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                  return ManualCalls();
-                }));
-              },
-                child: Text("Manual calls"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-                ),
-              ),
+              const SizedBox(height: 10),
 
-              ElevatedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                  return SetThreshold();
-                }));
-              },
-                child: Text("Set threshold"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-                ),
-              ),
+              MyButton(text: "Manual calls",
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                      // return CallLogs();
+                      return const ManualCalls();
+                    }));
+                  }, padding: 15,
+                  margin: 15),
 
-              ElevatedButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                  service.invoke('stopService');
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                    return LoginPage();
-                  }));
-                },
-                child: Text("Sign out"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-                ),
-              ),
+              const SizedBox(height: 10),
+
+              MyButton(text: "Set threshold",
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                      // return CallLogs();
+                      return const SetThreshold();
+                    }));
+                  }, padding: 15,
+                  margin: 15),
+
+              const SizedBox(height: 10),
+
+              MyButton(text: "Sign out",
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    service.invoke('stopService');
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                      return LoginPage();
+                    }));
+                  }, padding: 15,
+                  margin: 15),
 
             ],
           )

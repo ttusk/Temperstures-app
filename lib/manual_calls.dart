@@ -61,7 +61,7 @@ class _ManualCallsState extends State<ManualCalls> {
               return ListView.builder(
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
-                    // return Text("${docs.length}");
+                    // return TextField.dart("${docs.length}");
                     return Slidable(
                       startActionPane: ActionPane(
                         motion: const BehindMotion(),
@@ -75,6 +75,21 @@ class _ManualCallsState extends State<ManualCalls> {
                                   .collection("manualCall")
                                   .doc(docs[index].id)
                                   .delete();
+
+                              showDialog(context: context,
+                                  builder: (context) => AlertDialog(
+                                actions: [
+                                  TextButton(onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                      child: Text("Ok")
+                                  )
+                                ],
+                                title: const Text("Manual alarm deleted"),
+
+                                content: const Text("Manual alarm has been deleted successfully."),
+                              ));
+
                             },
 
                           )

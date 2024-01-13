@@ -53,7 +53,7 @@ class _TestState extends State<Test> {
               return ListView.builder(
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
-                    // return Text("${docs.length}");
+                    // return TextField.dart("${docs.length}");
                     return ListTile(
                       title: Text(docs[index].id.toString()),
                       onTap: () {
@@ -157,7 +157,7 @@ class _TestState extends State<Test> {
   //   return Scaffold(
   //     appBar: AppBar(
   //       // automaticallyImplyLeading: false,
-  //       title: Text("Logs"),
+  //       title: TextField.dart("Logs"),
   //       centerTitle: true,
   //       backgroundColor: Colors.red[600],
   //       leading: BackButton(
@@ -174,10 +174,10 @@ class _TestState extends State<Test> {
   //           stream: _logStream,
   //           builder: (context, snapshot) {
   //             if(snapshot.hasError){
-  //               return const Text("Connection Error.");
+  //               return const TextField.dart("Connection Error.");
   //             }
   //             if(snapshot.connectionState == ConnectionState.waiting) {
-  //               return const Text("Loading..");
+  //               return const TextField.dart("Loading..");
   //             }
   //
   //             var docs = snapshot.data!.docs;
@@ -195,8 +195,8 @@ class _TestState extends State<Test> {
   //                     tileColor = Colors.white;
   //                   }
   //                   return  ListTile(
-  //                     title: Text(docs[index]["name"]),
-  //                     subtitle: Text(docs[index]["date and time"].toDate().toString()),
+  //                     title: TextField.dart(docs[index]["name"]),
+  //                     subtitle: TextField.dart(docs[index]["date and time"].toDate().toString()),
   //                     tileColor: tileColor,
   //                   );
   //                 });
