@@ -226,8 +226,8 @@ void onStart(ServiceInstance service) async{
     var db = FirebaseFirestore.instance;
     final docCall = db.collection("manualCall").doc("00");
 
-
-      Timer.periodic(const Duration(seconds: 1), (timer) async {
+      // App fetches data about the calls every 30 seconds.
+      Timer.periodic(const Duration(seconds: 30), (timer) async {
         getManualCallsList();
         getManualCallsMessages();
         getThreshold();
