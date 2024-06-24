@@ -31,7 +31,7 @@ class _HomeState extends State {
       appBar: AppBar(
         backgroundColor: Colors.grey[600],
         automaticallyImplyLeading: false,
-        title: Text("Home"),
+        title: Text("Welcome, $name"),
       ),
       body: Container(
       alignment: Alignment.center,
