@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:temps_app/components/my_button.dart';
 import 'package:temps_app/manual_calls.dart';
 
 import 'admin_home.dart';
@@ -17,6 +18,29 @@ class _SetManualCallState extends State<SetManualCall> {
 
   TextEditingController _messageController = TextEditingController();
 
+  void setManualCallButton(){
+    FirebaseFirestore.instance
+        .collection("manualCall")
+        .doc()
+        .set({'date and time': dateTime, 'message': _messageController.text.toString()});
+
+    showDialog(context: context,
+      builder: (context) => AlertDialog(
+        actions: [
+          TextButton(onPressed: () {
+            Navigator.of(context).pop();
+
+          },
+              child: Text("Ok!")
+          )
+        ],
+        title: Text("Manual Call"),
+
+        content: Text("Call has been set and will ring 30 mins before $dateTime."),
+      ),
+    );
+  }
+
 
 
   @override
@@ -26,7 +50,7 @@ class _SetManualCallState extends State<SetManualCall> {
         // automaticallyImplyLeading: false,
         title: Text("Set a manual call"),
         centerTitle: true,
-        backgroundColor: Colors.red[600],
+        backgroundColor: Colors.grey[600],
         leading: BackButton(
           onPressed:  () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context){
@@ -62,14 +86,13 @@ class _SetManualCallState extends State<SetManualCall> {
                 ),
               ),
 
-
               TextField(
                 controller: _messageController,
                 minLines: 3,
                 maxLines: 6,
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(
-                  labelText: "Message",
+                  labelText: "Message (Optional)",
                   hintText: "Enter message",
 
                   border: OutlineInputBorder(),
@@ -79,35 +102,38 @@ class _SetManualCallState extends State<SetManualCall> {
               SizedBox(height: 20),
 
 
+              MyButton(text: "Set call", padding: 15, margin: 20, onTap: setManualCallButton,)
 
-              ElevatedButton(
-                onPressed: () {
-                  FirebaseFirestore.instance
-                      .collection("manualCall")
-                      .doc()
-                      .set({'date and time': dateTime, 'message': _messageController.text.toString()});
 
-                  showDialog(context: context,
-                    builder: (context) => AlertDialog(
-                      actions: [
-                        TextButton(onPressed: () {
-                          Navigator.of(context).pop();
 
-                        },
-                            child: Text("Ok!")
-                        )
-                      ],
-                      title: Text("Manual Call"),
-
-                      content: Text("Call has been set and will ring 30 mins before $dateTime."),
-                    ),
-                  );
-                },
-                child: Text("Set call"),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.yellow[600],
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     FirebaseFirestore.instance
+              //         .collection("manualCall")
+              //         .doc()
+              //         .set({'date and time': dateTime, 'message': _messageController.text.toString()});
+              //
+              //     showDialog(context: context,
+              //       builder: (context) => AlertDialog(
+              //         actions: [
+              //           TextButton(onPressed: () {
+              //             Navigator.of(context).pop();
+              //
+              //           },
+              //               child: Text("Ok!")
+              //           )
+              //         ],
+              //         title: Text("Manual Call"),
+              //
+              //         content: Text("Call has been set and will ring 30 mins before $dateTime."),
+              //       ),
+              //     );
+              //   },
+              //   child: Text("Set call"),
+              //   style: TextButton.styleFrom(
+              //     foregroundColor: Colors.yellow[600],
+              //   ),
+              // ),
 
             ],
           )

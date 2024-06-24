@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:temps_app/components/my_button.dart';
 
 import 'admin_home.dart';
 
@@ -32,6 +33,31 @@ class _SetThresholdState extends State<SetThreshold> {
     return threshold;
   }
 
+  void setNewThresholdButton(){
+    showDialog(context: context,
+      builder: (context) => AlertDialog(
+        actions: [
+          TextButton(onPressed: () {
+            FirebaseFirestore.instance
+                .collection("tempThreshold")
+                .doc("00")
+                .update({'threshold': threshold});
+
+            getCurrentThreshold();
+            Navigator.of(context).pop();
+
+          },
+              child: Text("YES!")
+          )
+        ],
+        title: Text("Threshold"),
+
+        content: Text("Are you sure you want to change the threshold from $oldThreshold to $threshold?"),
+      ),
+    );
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -45,6 +71,7 @@ class _SetThresholdState extends State<SetThreshold> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[600],
         title: const Text("Set threshold"),
         leading: BackButton(
           onPressed: () {
@@ -97,35 +124,37 @@ class _SetThresholdState extends State<SetThreshold> {
 
                     SizedBox(height: 20),
 
-                    ElevatedButton(
-                      onPressed: () {
-                        showDialog(context: context,
-                          builder: (context) => AlertDialog(
-                            actions: [
-                              TextButton(onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection("tempThreshold")
-                                    .doc("00")
-                                    .update({'threshold': threshold});
+                    MyButton(text: "Set new threshold", padding: 15, margin: 20, onTap: setNewThresholdButton,),
 
-                                getCurrentThreshold();
-                                Navigator.of(context).pop();
-
-                              },
-                                  child: Text("YES!")
-                              )
-                            ],
-                            title: Text("Threshold"),
-
-                            content: Text("Are you sure you want to change the threshold from $oldThreshold to $threshold?"),
-                          ),
-                        );
-                      },
-                      child: Text("Set new threshold"),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.yellow[600],
-                      ),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     showDialog(context: context,
+                    //       builder: (context) => AlertDialog(
+                    //         actions: [
+                    //           TextButton(onPressed: () {
+                    //             FirebaseFirestore.instance
+                    //                 .collection("tempThreshold")
+                    //                 .doc("00")
+                    //                 .update({'threshold': threshold});
+                    //
+                    //             getCurrentThreshold();
+                    //             Navigator.of(context).pop();
+                    //
+                    //           },
+                    //               child: Text("YES!")
+                    //           )
+                    //         ],
+                    //         title: Text("Threshold"),
+                    //
+                    //         content: Text("Are you sure you want to change the threshold from $oldThreshold to $threshold?"),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: Text("Set new threshold"),
+                    //   style: TextButton.styleFrom(
+                    //     foregroundColor: Colors.yellow[600],
+                    //   ),
+                    // ),
 
 
                   ],

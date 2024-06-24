@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temps_app/login_page.dart';
 import 'package:temps_app/readings.dart';
 
+import 'components/my_button.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -27,6 +29,7 @@ class _HomeState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[600],
         automaticallyImplyLeading: false,
         title: Text("Home"),
       ),
@@ -36,34 +39,53 @@ class _HomeState extends State {
     padding: EdgeInsets.all(20.0),
     child: ListView(
       children: [
-        ElevatedButton(
-            onPressed: () {
+        // ElevatedButton(
+        //     onPressed: () {
+        //       Navigator.of(context).push(MaterialPageRoute(builder: (context){
+        //         return const Readings();
+        //       }));
+        //
+        //     },
+        //   child: Text("Room temprature"),
+        //   style: TextButton.styleFrom(
+        //     foregroundColor: Colors.yellow[600],
+        //
+        //   ),
+        // ),
+
+        MyButton(onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context){
+            return const Readings();
+          }));
+        }, text: 'Room temperatures',
+            padding: 15,
+            margin: 15),
+
+        const SizedBox(height: 10,),
+
+        MyButton(text: "Sign out",
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              service.invoke('stopService');
               Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                return const Readings();
+                return LoginPage();
               }));
+            }, padding: 15,
+            margin: 15),
 
-            },
-          child: Text("Room temprature"),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.yellow[600],
-
-          ),
-        ),
-
-
-        ElevatedButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            service.invoke('stopService');
-            Navigator.of(context).push(MaterialPageRoute(builder: (context){
-              return LoginPage();
-            }));
-          },
-          child: Text("Sign Out"),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.yellow[600],
-          ),
-        ),
+        // ElevatedButton(
+        //   onPressed: () {
+        //     FirebaseAuth.instance.signOut();
+        //     service.invoke('stopService');
+        //     Navigator.of(context).push(MaterialPageRoute(builder: (context){
+        //       return LoginPage();
+        //     }));
+        //   },
+        //   child: Text("Sign Out"),
+        //   style: TextButton.styleFrom(
+        //     foregroundColor: Colors.yellow[600],
+        //   ),
+        // ),
       ],
     )
       ),

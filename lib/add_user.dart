@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:temps_app/components/my_button.dart';
 import 'package:temps_app/view_all_users.dart';
 
 import 'login_page.dart';
@@ -28,6 +29,42 @@ class _AddUserState extends State<AddUser> {
 
   }
 
+  void addUserButton(){
+    try{
+      // showError("Loading", context);
+      if(_idController.text.isEmpty || _nameController.text.isEmpty || _passwordController.text.isEmpty){
+        showError("Please enter all credentials.", context);
+        return;
+      }
+      String? name = _nameController.text;
+      addNewUser(_idController.text, _nameController.text, _passwordController.text, isAdmin!);
+      showDialog(context: context,
+        builder: (context) => AlertDialog(
+          actions: [
+            TextButton(onPressed: () {
+              Navigator.of(context).pop();
+
+              Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                return ViewAllUsers();
+              }));
+            },
+                child: Text("Ok!")
+            )
+          ],
+          title: Text("New user"),
+
+          content: Text("$name added to database."),
+        ),
+      );
+
+    }catch(e){
+      showError("Can't connect, please try later", context);
+
+    }
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +81,7 @@ class _AddUserState extends State<AddUser> {
         ),
         title: Text("Add user"),
         centerTitle: true,
-        backgroundColor: Colors.red[600],
+        backgroundColor: Colors.grey[600],
       ),
       body: Container(
         alignment: Alignment.center,
@@ -114,45 +151,48 @@ class _AddUserState extends State<AddUser> {
 
                     const SizedBox(height: 10.0),
 
-                    ElevatedButton(
-                      onPressed: () {
-                       try{
-                         // showError("Loading", context);
-                         if(_idController.text.isEmpty || _nameController.text.isEmpty || _passwordController.text.isEmpty){
-                           showError("Please enter all credentials.", context);
-                           return;
-                         }
-                         String? name = _nameController.text;
-                         addNewUser(_idController.text, _nameController.text, _passwordController.text, isAdmin!);
-                         showDialog(context: context,
-                             builder: (context) => AlertDialog(
-                               actions: [
-                                 TextButton(onPressed: () {
-                                   Navigator.of(context).pop();
+                    // "Add user" button
+                    MyButton(text: "Add user", padding: 15, margin: 20, onTap: addUserButton,),
 
-                                   Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                                     return ViewAllUsers();
-                                   }));
-                                 },
-                                     child: Text("Ok!")
-                                 )
-                               ],
-                               title: Text("New user"),
-
-                               content: Text("$name added to database."),
-                             ),
-                         );
-                         
-                       }catch(e){
-                         showError("Can't connect, please try later", context);
-                         
-                       }
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.yellow[600],
-                      ),
-                      child: Text("Add user"),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //    try{
+                    //      // showError("Loading", context);
+                    //      if(_idController.text.isEmpty || _nameController.text.isEmpty || _passwordController.text.isEmpty){
+                    //        showError("Please enter all credentials.", context);
+                    //        return;
+                    //      }
+                    //      String? name = _nameController.text;
+                    //      addNewUser(_idController.text, _nameController.text, _passwordController.text, isAdmin!);
+                    //      showDialog(context: context,
+                    //          builder: (context) => AlertDialog(
+                    //            actions: [
+                    //              TextButton(onPressed: () {
+                    //                Navigator.of(context).pop();
+                    //
+                    //                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                    //                  return ViewAllUsers();
+                    //                }));
+                    //              },
+                    //                  child: Text("Ok!")
+                    //              )
+                    //            ],
+                    //            title: Text("New user"),
+                    //
+                    //            content: Text("$name added to database."),
+                    //          ),
+                    //      );
+                    //
+                    //    }catch(e){
+                    //      showError("Can't connect, please try later", context);
+                    //
+                    //    }
+                    //   },
+                    //   style: TextButton.styleFrom(
+                    //     foregroundColor: Colors.yellow[600],
+                    //   ),
+                    //   child: Text("Add user"),
+                    // ),
 
 
                   ],

@@ -64,6 +64,7 @@ class _ReadingsState extends State<Readings> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[600],
         title: Text("Readings"),
       ),
       body: Container(

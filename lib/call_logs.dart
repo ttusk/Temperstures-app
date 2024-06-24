@@ -93,7 +93,7 @@ class _CallLogsState extends State<CallLogs> {
         // automaticallyImplyLeading: false,
         title: Text("Logs"),
         centerTitle: true,
-        backgroundColor: Colors.red[600],
+        backgroundColor: Colors.grey[600],
         leading: BackButton(
           onPressed:  () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context){

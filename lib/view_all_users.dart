@@ -20,10 +20,10 @@ class _ViewAllUsersState extends State<ViewAllUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[600],
         // automaticallyImplyLeading: false,
         title: Text("All Users"),
         centerTitle: true,
-        backgroundColor: Colors.red[600],
         leading: BackButton(
           onPressed:  () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context){

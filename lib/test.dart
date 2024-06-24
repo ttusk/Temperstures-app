@@ -23,7 +23,7 @@ class _TestState extends State<Test> {
         // automaticallyImplyLeading: false,
         title: Text("Call logs"),
         centerTitle: true,
-        backgroundColor: Colors.red[600],
+        backgroundColor: Colors.grey[600],
         leading: BackButton(
           onPressed:  () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context){
@@ -89,7 +89,7 @@ class _TestState extends State<Test> {
         // automaticallyImplyLeading: false,
         title: Text("Logs"),
         centerTitle: true,
-        backgroundColor: Colors.red[600],
+        backgroundColor: Colors.grey[600],
     //     leading: BackButton(
     //       onPressed:  () {
     //         Navigator.of(context).push(MaterialPageRoute(builder: (context){
